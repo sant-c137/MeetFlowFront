@@ -1,21 +1,21 @@
-import { useState } from 'react';
-import { useAuth } from '../auth/AuthProvider';
-import { Navigate } from 'react-router-dom';
-import axios from 'axios';
-import Button from '../components/Button';
-// import './Login.css';
+import { useState } from "react";
+import { useAuth } from "../auth/AuthProvider";
+import { Navigate } from "react-router-dom";
+import axios from "axios";
+import Button from "../components/Button";
+import "./Login.css";
 
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const { isAuthenticated, updateAuthStatus } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        'http://localhost:8000/api/login/',
+        "http://localhost:8000/api/login/",
         {
           username,
           password,
@@ -23,7 +23,7 @@ const Login = () => {
         {
           withCredentials: true,
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
@@ -32,13 +32,13 @@ const Login = () => {
         updateAuthStatus(true);
       }
     } catch (err) {
-      setError('Invalid username or password');
-      console.error('Login error:', err);
+      setError("Invalid username or password");
+      console.error("Login error:", err);
     }
   };
 
   return isAuthenticated ? (
-    <Navigate to="/notes" replace />
+    <Navigate to="/home" replace />
   ) : (
     <>
       <form onSubmit={handleSubmit} className="login-form">

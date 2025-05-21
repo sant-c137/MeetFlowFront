@@ -1,28 +1,28 @@
-import { useState } from 'react';
-import axios from 'axios';
-import Button from '../components/Button';
-// import './Register.css';
+import { useState } from "react";
+import axios from "axios";
+import Button from "../components/Button";
+import "./Register.css";
 
 const Register = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/api/register/', {
+      const response = await axios.post("http://localhost:8000/api/register/", {
         username,
         password,
         email,
       });
       setSuccess(response.data.message);
-      setError('');
+      setError("");
     } catch (err) {
-      setError(err.response?.data?.error || 'An error occurred');
-      setSuccess('');
+      setError(err.response?.data?.error || "An error occurred");
+      setSuccess("");
     }
   };
 

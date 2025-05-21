@@ -1,26 +1,18 @@
-.home-page-wrapper {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: #fdfcfa;
-}
-
-.home-content-area {
-  flex-grow: 1;
+.my-events-page-container {
   padding: 25px 30px;
   max-width: 900px;
   margin: 0 auto;
   width: 100%;
 }
 
-.events-header-bar {
+.my-events-header-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 25px;
 }
 
-.events-header-bar h1 {
+.my-events-header-bar h1 {
   font-size: 2.2em;
   color: #333;
   font-weight: 700;
@@ -40,6 +32,9 @@
 
 .new-event-button:hover {
   background-color: #5849a4;
+}
+
+.event-list-container {
 }
 
 .loading-text,
@@ -112,9 +107,6 @@
   font-size: 1em;
   box-sizing: border-box;
 }
-.modal-form input[type="datetime-local"] {
-  appearance: none;
-}
 
 .modal-form textarea {
   min-height: 80px;
@@ -140,12 +132,8 @@
   border: 1px solid #eee;
   position: relative;
 }
-.modal-form .time-option-group {
-  display: flex;
-  gap: 15px;
-  align-items: flex-end;
-}
-.modal-form .time-option-group .form-group-inline {
+
+.modal-form .time-option-group.single-datetime .form-group-inline {
   flex: 1;
 }
 
@@ -177,6 +165,7 @@
   padding: 4px 8px;
   font-size: 1.1em;
   line-height: 1;
+
   position: absolute;
   top: 10px;
   right: 10px;
@@ -192,6 +181,14 @@
   gap: 10px;
 }
 
+.modal-actions button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95em;
+  font-weight: 500;
+  cursor: pointer;
+}
 .modal-actions .button-primary {
   background-color: #6a5acd;
   color: white;
@@ -214,14 +211,6 @@
   background-color: #c9302c;
 }
 
-.modal-actions button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  font-size: 0.95em;
-  font-weight: 500;
-  cursor: pointer;
-}
 .modal-actions button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
@@ -255,48 +244,4 @@
 .event-detail-content ul li {
   margin-bottom: 5px;
   color: #555;
-}
-
-.home-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100dvh;
-
-  background-color: var(--bg-color);
-}
-
-.home-container {
-  width: 98%;
-  height: 97%;
-  border-radius: 1rem;
-  background-color: white;
-  border: solid var(--color-secondary) 2px;
-
-  overflow: hidden;
-
-  & img {
-    width: 4rem;
-  }
-}
-
-.events-container {
-  display: flex;
-  height: 100%;
-}
-
-.my-events {
-  width: 50%;
-  height: 100%;
-
-  background: var(--bg-color);
-}
-
-.invited-events {
-  height: 100%;
-  width: 50%;
-
-  background: var(--bg-color);
-
-  overflow: scroll;
 }

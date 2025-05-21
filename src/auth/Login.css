@@ -1,1 +1,21 @@
-"import" 
+.login-form {
+  background-color: var(--color-secondary);
+
+  color: var(--text-color);
+
+  border-radius: 1rem 0 0 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 3rem;
+  gap: 1rem;
+}
+
+.login-input {
+  background-color: var(--bg-color);
+  padding: 0.5rem 1rem;
+  border-radius: 0.4rem;
+  border: solid #dcd7ec 0.1rem;
+  width: 18rem;
+}

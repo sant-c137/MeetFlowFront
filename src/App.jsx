@@ -1,17 +1,17 @@
-import React, { Suspense } from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import React, { Suspense } from "react";
+import { createBrowserRouter } from "react-router-dom";
 // import './App.css';
 
-const NotFoundPage = React.lazy(() => import('./NotFoundPage'));
-const Loading = React.lazy(() => import('./Loading'));
-const Authentication = React.lazy(() => import('./Authentication'));
-const Home = React.lazy(() => import('./Home'));
-const ProtectedRoute = React.lazy(() => import('./auth/ProtectedRoute'));
+const NotFoundPage = React.lazy(() => import("./NotFoundPage"));
+const Loading = React.lazy(() => import("./Loading"));
+const Authentication = React.lazy(() => import("./Authentication"));
+const Home = React.lazy(() => import("./Home"));
+const ProtectedRoute = React.lazy(() => import("./auth/ProtectedRoute"));
 
 function App() {
   const router = createBrowserRouter([
     {
-      path: '/',
+      path: "/",
       element: (
         <Suspense fallback={<Loading />}>
           <Authentication />
@@ -21,7 +21,7 @@ function App() {
     },
 
     {
-      path: '/',
+      path: "/",
       element: (
         <Suspense fallback={<Loading />}>
           <ProtectedRoute />
@@ -30,7 +30,7 @@ function App() {
       errorElement: <NotFoundPage />,
       children: [
         {
-          path: '/notes',
+          path: "/home",
           element: (
             <Suspense fallback={<Loading />}>
               <Home />
@@ -40,7 +40,7 @@ function App() {
       ],
     },
     {
-      path: '*',
+      path: "*",
       element: (
         <Suspense fallback={<Loading />}>
           <NotFoundPage />

@@ -1,9 +1,9 @@
-// import './Button.css';
+import "./Button.css";
 
 const Button = ({ Text, className, ...props }) => {
   return (
     <div className="container-button">
-      <button className={`btn ${className || ''}`} {...props}>
+      <button className={`btn ${className || ""}`} {...props}>
         {Text}
       </button>
     </div>

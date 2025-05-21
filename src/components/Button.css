@@ -1,1 +1,7 @@
-"import" 
+.btn {
+  background-color: var(--color-primary);
+  color: var(--bg-color);
+  padding: 0.4rem 2rem;
+  border: none;
+  border-radius: 0.4rem;
+}

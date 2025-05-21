@@ -1,1 +1,17 @@
-"import" 
+:root {
+  --color-primary: #6358d9;
+  --color-secondary: #ccc5f4;
+  --color-third: #2fa1c7;
+  --text-color: #071962;
+  --bg-color: #fffbf2;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  /* font-family: "Nunito Variable", sans-serif; */
+  font-family: "Poppins", sans-serif;
+
+  color: var(--text-color);
+}

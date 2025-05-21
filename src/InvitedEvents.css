@@ -1,0 +1,130 @@
+.invited-events-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.invited-events-container h2 {
+  font-size: 1.8em;
+  color: #333;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+}
+
+.invited-events-wrapper {
+  /* overflow: scroll; */
+}
+
+.loading-text,
+.error-text,
+.no-invitations-text {
+  text-align: center;
+  font-size: 1.1em;
+  color: #666;
+  padding: 20px;
+}
+
+.error-text {
+  color: #d9534f;
+}
+
+.invitations-list {
+  display: grid;
+  gap: 20px;
+}
+
+.invitation-item {
+  background-color: #fdfdfd;
+  border-radius: 8px;
+  border: 1px solid #e8e8e8;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.invitation-info {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px dashed #ddd;
+}
+
+.invitation-info p {
+  margin: 5px 0;
+  font-size: 0.95em;
+  color: #555;
+}
+.invitation-info p strong {
+  color: #333;
+}
+
+.status-badge {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.8em;
+  font-weight: 500;
+  color: white;
+  display: inline-block;
+}
+
+.status-badge.status-pending {
+  background-color: #ffc107;
+  color: #333;
+}
+.status-badge.status-accepted {
+  background-color: #28a745;
+}
+.status-badge.status-declined {
+  background-color: #dc3545;
+}
+.status-badge.status-tentative {
+  background-color: #17a2b8;
+}
+
+.respond-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+  margin-top: 10px;
+  transition: background-color 0.2s ease;
+}
+.respond-button:hover {
+  background-color: #0056b3;
+}
+
+.response-recorded {
+  font-style: italic;
+  color: #6c757d;
+  font-size: 0.9em;
+  margin-top: 10px;
+  display: inline-block;
+}
+
+.response-modal h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 1.4em;
+}
+.response-modal .modal-form p {
+  margin-bottom: 10px;
+  font-size: 1em;
+}
+.response-modal .form-group.radio-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 1em;
+  cursor: pointer;
+}
+.response-modal .form-group.radio-group input[type="radio"] {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.response-modal .modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
