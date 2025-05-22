@@ -287,16 +287,19 @@
 
 .my-events {
   width: 50%;
-  height: 100%;
+  height: 93%;
 
   background: var(--bg-color);
+  overflow: scroll;
+  scrollbar-width: none;
 }
 
 .invited-events {
-  height: 100%;
+  height: 90%;
   width: 50%;
 
   background: var(--bg-color);
 
   overflow: scroll;
+  scrollbar-width: none;
 }

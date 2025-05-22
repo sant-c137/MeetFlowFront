@@ -5,34 +5,53 @@ const EventCard = ({ event, onClick }) => {
   let displayMonth = "";
   let displayDay = "";
 
-  if (event.time_options && event.time_options.length > 0) {
+  if (event && event.time_options && event.time_options.length > 0) {
     const firstTimeOption = event.time_options[0];
 
-    const dateString = firstTimeOption.start_time;
+    const dateString = firstTimeOption.datetime || firstTimeOption.start_time;
 
     if (dateString) {
       try {
-        displayDate = new Date(dateString);
+        const parsedDate = new Date(dateString);
+
+        if (!isNaN(parsedDate.getTime())) {
+          displayDate = parsedDate;
+        } else {
+          console.warn(
+            "Could not parse time_option date (invalid date object):",
+            dateString
+          );
+        }
       } catch (e) {
-        console.warn("Could not parse time_option date:", dateString);
+        console.warn("Error parsing time_option date:", dateString, e);
       }
     }
   }
 
-  if (!displayDate && event.creation_date) {
+  if (!displayDate && event && event.creation_date) {
     try {
-      displayDate = new Date(event.creation_date);
+      const parsedDate = new Date(event.creation_date);
+
+      if (!isNaN(parsedDate.getTime())) {
+        displayDate = parsedDate;
+      } else {
+        console.warn(
+          "Could not parse creation_date (invalid date object):",
+          event.creation_date
+        );
+      }
     } catch (e) {
-      console.warn("Could not parse creation_date:", event.creation_date);
+      console.warn("Error parsing creation_date:", event.creation_date, e);
     }
   }
 
-  if (displayDate && !isNaN(displayDate)) {
-    displayMonth = displayDate.toLocaleString("default", { month: "short" });
+  if (displayDate) {
+    displayMonth = displayDate.toLocaleString("es-ES", { month: "short" });
     displayDay = displayDate.getDate();
   } else {
-    displayMonth = event.title ? event.title.charAt(0).toUpperCase() : "Ev";
-    displayDay = "";
+    displayMonth =
+      event && event.title ? event.title.charAt(0).toUpperCase() : "Ev";
+    displayDay = event && event.title ? "" : "??";
   }
 
   return (
@@ -42,9 +61,9 @@ const EventCard = ({ event, onClick }) => {
         <span className="day">{displayDay}</span>
       </div>
       <div className="event-card-info">
-        <h3 className="event-title">{event.title}</h3>
+        <h3 className="event-title">{event?.title || "Evento sin título"}</h3>
         <p className="event-description">
-          {event.description || "No description"}
+          {event?.description || "Sin descripción"}
         </p>
       </div>
     </div>

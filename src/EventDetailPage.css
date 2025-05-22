@@ -1,0 +1,148 @@
+/* EventDetailPage.css */
+.event-detail-page-container {
+  width: 100%;
+  height: 90%;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
+  overflow: scroll;
+  scrollbar-width: none;
+}
+
+.event-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.event-detail-header h1 {
+  font-size: 2.2em;
+  color: #333;
+  margin: 0;
+}
+
+.back-button {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background-color: #e0e0e0;
+}
+
+.event-detail-content {
+  display: flex;
+  flex-grow: 1;
+  gap: 1rem;
+  justify-content: space-around;
+}
+
+.event-detail-content section {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px dashed #f0f0f0;
+}
+.event-detail-content section:last-of-type {
+  /* No border for the last section */
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.event-detail-content h2 {
+  font-size: 1.6em;
+  color: #444;
+  margin-bottom: 1rem;
+}
+
+.event-detail-content h3 {
+  font-size: 1.3em;
+  color: #555;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.event-detail-content p,
+.event-detail-content li {
+  font-size: 1em;
+  line-height: 1.7;
+  color: #555;
+  margin-bottom: 0.6rem;
+}
+
+.event-detail-content strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.event-detail-content ul {
+  list-style: disc;
+  padding-left: 25px;
+  margin-top: 0.5rem;
+}
+
+.event-actions {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap; /* Para mejor responsiveness */
+  align-items: center;
+}
+
+/* Reutiliza tus clases de botones si ya las tienes, o define unas nuevas */
+.button-primary,
+.button-danger,
+.button-secondary {
+  /* Añade .button-secondary si lo usas */
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 1em;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.button-primary {
+  background-color: var(--color-primary, #007bff); /* Usa tus variables CSS */
+}
+.button-primary:hover {
+  background-color: var(--color-primary-dark, #0056b3);
+}
+
+.button-danger {
+  background-color: var(--color-danger, #dc3545);
+}
+.button-danger:hover {
+  background-color: var(--color-danger-dark, #c82333);
+}
+
+.loading-text,
+.error-text,
+.no-data-text {
+  text-align: center;
+  font-size: 1.2em;
+  padding: 3rem 1rem;
+  color: #777;
+}
+.error-text {
+  color: var(--color-danger, #c00);
+}

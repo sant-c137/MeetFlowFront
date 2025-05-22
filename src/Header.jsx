@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
-import Modal from "react-modal";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "./Header.css";
@@ -13,7 +12,6 @@ axios.defaults.baseURL = "http://localhost:8000";
 axios.defaults.withCredentials = true;
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFToken";
-Modal.setAppElement("#root");
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -35,6 +33,9 @@ const Header = () => {
   const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
   const searchInputRef = useRef(null);
   const searchDropdownRef = useRef(null);
+
+  const accountButtonRef = useRef(null);
+  const accountDropdownRef = useRef(null);
 
   const navigate = useNavigate();
 
@@ -101,6 +102,7 @@ const Header = () => {
 
   const toggleNotificationsDropdown = () => {
     setIsNotificationsOpen((prev) => !prev);
+    if (isAccountModalOpen) setIsAccountModalOpen(false);
   };
 
   const handleNotificationClick = async (notification) => {
@@ -147,6 +149,22 @@ const Header = () => {
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutsideAccount = (event) => {
+      if (
+        accountDropdownRef.current &&
+        !accountDropdownRef.current.contains(event.target) &&
+        accountButtonRef.current &&
+        !accountButtonRef.current.contains(event.target)
+      ) {
+        setIsAccountModalOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutsideAccount);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutsideAccount);
   }, []);
 
   useEffect(() => {
@@ -215,9 +233,10 @@ const Header = () => {
       document.removeEventListener("mousedown", handleClickOutsideSearch);
   }, []);
 
-  const handleAccountIconClick = () => {
+  const toggleAccountDropdown = () => {
     if (isLoggedIn) {
-      setIsAccountModalOpen(true);
+      setIsAccountModalOpen((prev) => !prev);
+      if (isNotificationsOpen) setIsNotificationsOpen(false);
     } else {
       console.log("User not logged in. Consider prompting for login.");
     }
@@ -394,52 +413,57 @@ const Header = () => {
               )}
             </div>
           )}
-          <div
-            className="account-section"
-            onClick={handleAccountIconClick}
-            role="button"
-            tabIndex={0}
-            aria-label="Account"
-          >
-            {accountIconContent()}
+          <div className="account-section" ref={accountButtonRef}>
+            <div
+              onClick={toggleAccountDropdown}
+              role="button"
+              tabIndex={0}
+              aria-expanded={isAccountModalOpen}
+              aria-label="Account menu"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                cursor: "pointer",
+              }}
+            >
+              {accountIconContent()}
+            </div>
+
+            {isAccountModalOpen && userData && (
+              <div className="account-dropdown" ref={accountDropdownRef}>
+                {" "}
+                <div className="account-dropdown-header">
+                  {" "}
+                  <h2>Account Information</h2>
+                  <button
+                    onClick={() => setIsAccountModalOpen(false)}
+                    className="close-modal-button"
+                    aria-label="Close account menu"
+                  >
+                    ×
+                  </button>
+                </div>
+                <div className="account-dropdown-user-details">
+                  {" "}
+                  <div className="user-avatar-large">{getUserInitial()}</div>
+                  <p>
+                    <strong>Name:</strong> {userData.username}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {userData.email}
+                  </p>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="logout-button account-dropdown-logout"
+                >
+                  Log Out
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
-
-      <Modal
-        isOpen={isAccountModalOpen}
-        onRequestClose={() => setIsAccountModalOpen(false)}
-        contentLabel="User Account Information"
-        className="modal-content account-modal"
-        overlayClassName="modal-overlay"
-      >
-        {userData && (
-          <div className="user-info-modal">
-            <div className="modal-header">
-              <h2>Account Information</h2>
-              <button
-                onClick={() => setIsAccountModalOpen(false)}
-                className="close-modal-button"
-                aria-label="Close modal"
-              >
-                ×
-              </button>
-            </div>
-            <div className="user-details">
-              <div className="user-avatar-large">{getUserInitial()}</div>
-              <p>
-                <strong>Name:</strong> {userData.username}
-              </p>
-              <p>
-                <strong>Email:</strong> {userData.email}
-              </p>
-            </div>
-            <button onClick={handleLogout} className="logout-button">
-              Log Out
-            </button>
-          </div>
-        )}
-      </Modal>
     </>
   );
 };

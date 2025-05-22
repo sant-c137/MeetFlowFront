@@ -1,12 +1,12 @@
 import React, { Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
-// import './App.css';
 
 const NotFoundPage = React.lazy(() => import("./NotFoundPage"));
 const Loading = React.lazy(() => import("./Loading"));
 const Authentication = React.lazy(() => import("./Authentication"));
 const Home = React.lazy(() => import("./Home"));
 const ProtectedRoute = React.lazy(() => import("./auth/ProtectedRoute"));
+const EventDetailPage = React.lazy(() => import("./EventDetailPage"));
 
 function App() {
   const router = createBrowserRouter([
@@ -19,7 +19,6 @@ function App() {
       ),
       errorElement: <NotFoundPage />,
     },
-
     {
       path: "/",
       element: (
@@ -34,6 +33,14 @@ function App() {
           element: (
             <Suspense fallback={<Loading />}>
               <Home />
+            </Suspense>
+          ),
+        },
+        {
+          path: "/events/:eventId",
+          element: (
+            <Suspense fallback={<Loading />}>
+              <EventDetailPage />
             </Suspense>
           ),
         },
