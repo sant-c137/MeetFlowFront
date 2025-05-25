@@ -36,7 +36,6 @@ const Home = () => {
                 <MyEvents onEventSelect={handleViewEventDetails} />
               </div>
               <div className="invited-events">
-                {/* Asumiendo que InvitedEvents también tiene una prop onEventSelect */}
                 <InvitedEvents onEventSelect={handleViewEventDetails} />
               </div>
             </div>

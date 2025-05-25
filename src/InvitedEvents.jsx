@@ -239,7 +239,6 @@ const InvitedEvents = () => {
               </div>
             </fieldset>
 
-            {/* Solo mostrar opciones de voto si se acepta o es tentativo */}
             {(currentResponseStatus === "accepted" ||
               currentResponseStatus === "tentative") && (
               <>

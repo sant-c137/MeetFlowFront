@@ -363,7 +363,6 @@ const MyEvents = ({ onEventSelect }) => {
                   <label htmlFor={`timeOptionDateTime-${index}`}>
                     Date & Time
                   </label>{" "}
-                  {/* ID actualizado para unicidad */}
                   <input
                     type="datetime-local"
                     id={`timeOptionDateTime-${index}`}
