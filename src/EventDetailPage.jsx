@@ -127,21 +127,28 @@ const EventDetailPage = ({ eventId: propEventId, onBackToList }) => {
           endTimeForCalendar = null,
           locationStringForCalendar = "";
 
-        if (details.final_start_time) {
+        if (details.status === "confirmed" && details.final_start_time) {
           startTimeForCalendar = details.final_start_time;
           endTimeForCalendar = details.final_end_time || null;
         } else if (details.time_options?.length > 0) {
           const sortedTimeOptions = [...(details.time_options || [])].sort(
             (a, b) => (Number(b.vote_count) || 0) - (Number(a.vote_count) || 0)
           );
-          const chosenTimeOption = sortedTimeOptions[0];
-          if (chosenTimeOption) {
+          if (
+            sortedTimeOptions.length > 0 &&
+            sortedTimeOptions[0].vote_count > 0
+          ) {
+            const chosenTimeOption = sortedTimeOptions[0];
+            startTimeForCalendar = chosenTimeOption.start_time;
+            endTimeForCalendar = chosenTimeOption.end_time || null;
+          } else if (sortedTimeOptions.length > 0) {
+            const chosenTimeOption = sortedTimeOptions[0];
             startTimeForCalendar = chosenTimeOption.start_time;
             endTimeForCalendar = chosenTimeOption.end_time || null;
           }
         }
 
-        if (details.final_location) {
+        if (details.status === "confirmed" && details.final_location) {
           locationStringForCalendar =
             typeof details.final_location === "object"
               ? `${details.final_location.name}${
@@ -156,8 +163,20 @@ const EventDetailPage = ({ eventId: propEventId, onBackToList }) => {
           ].sort(
             (a, b) => (Number(b.vote_count) || 0) - (Number(a.vote_count) || 0)
           );
-          const chosenLocationOption = sortedLocationOptions[0];
-          if (chosenLocationOption) {
+          if (
+            sortedLocationOptions.length > 0 &&
+            sortedLocationOptions[0].vote_count > 0
+          ) {
+            const chosenLocationOption = sortedLocationOptions[0];
+            locationStringForCalendar = `${chosenLocationOption.name}${
+              chosenLocationOption.address
+                ? `, ${chosenLocationOption.address}`
+                : ""
+            }`;
+            if (chosenLocationOption.details)
+              locationStringForCalendar += ` (${chosenLocationOption.details})`;
+          } else if (sortedLocationOptions.length > 0) {
+            const chosenLocationOption = sortedLocationOptions[0];
             locationStringForCalendar = `${chosenLocationOption.name}${
               chosenLocationOption.address
                 ? `, ${chosenLocationOption.address}`
@@ -214,14 +233,19 @@ const EventDetailPage = ({ eventId: propEventId, onBackToList }) => {
 
   const handleDeleteEvent = async () => {
     if (!eventId || !eventDetails?.is_creator) return;
-    if (window.confirm("Are you sure you want to delete this event?")) {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this event? This action cannot be undone."
+      )
+    ) {
       try {
+        setIsLoadingDetails(true);
         await axios.delete(`/api/events/${eventId}/`);
-        alert("Event deleted successfully.");
+        // alert("Event deleted successfully.");
         if (onBackToList) {
           onBackToList();
         } else {
-          navigate("/my-events");
+          navigate("/home");
         }
       } catch (err) {
         const errorMsg =
@@ -229,7 +253,9 @@ const EventDetailPage = ({ eventId: propEventId, onBackToList }) => {
           err.response?.data?.error ||
           err.message ||
           "Could not delete event.";
-        alert(`Error deleting event: ${errorMsg}`);
+        // alert(`Error deleting event: ${errorMsg}`);
+      } finally {
+        setIsLoadingDetails(false);
       }
     }
   };
@@ -252,6 +278,7 @@ const EventDetailPage = ({ eventId: propEventId, onBackToList }) => {
       </div>
     );
   }
+
   if (isLoadingDetails) {
     return (
       <div className="event-detail-page-container loading-text">
@@ -259,6 +286,7 @@ const EventDetailPage = ({ eventId: propEventId, onBackToList }) => {
       </div>
     );
   }
+
   if (detailError) {
     return (
       <div className="event-detail-page-container error-text">
@@ -269,10 +297,11 @@ const EventDetailPage = ({ eventId: propEventId, onBackToList }) => {
       </div>
     );
   }
+
   if (!eventDetails) {
     return (
       <div className="event-detail-page-container no-data-text">
-        No event data found or event does not exist.
+        Event data not found or event does not exist.
         <button onClick={handleGoBack} className="back-button action-button">
           ← Back
         </button>
@@ -283,11 +312,6 @@ const EventDetailPage = ({ eventId: propEventId, onBackToList }) => {
   const creatorUsername =
     eventDetails.creator_username || eventDetails.creator || "N/A";
   const isCreator = eventDetails.is_creator === true;
-  const displayStatus =
-    eventDetails.status_display || eventDetails.status || "N/A";
-  const statusClass = (eventDetails.status || "undefined")
-    .toLowerCase()
-    .replace(/\s+/g, "-");
 
   const timeChartOptions =
     eventDetails.time_options?.map((opt) => ({
@@ -302,25 +326,26 @@ const EventDetailPage = ({ eventId: propEventId, onBackToList }) => {
     })) || [];
 
   const locationChartOptions =
-    eventDetails.location_options?.map((opt) => ({
-      id: `loc-opt-${opt.id}`,
-      label: `${opt.name}${opt.address ? ` (${opt.address})` : ""}${
+    eventDetails.location_options?.map((opt) => {
+      const fullLabel = `${opt.name}${opt.address ? ` (${opt.address})` : ""}${
         opt.details ? ` - ${opt.details}` : ""
-      }`,
-      vote_count: Number(opt.vote_count) || 0,
-      all_votes: opt.all_votes || [],
-    })) || [];
+      }`;
+      return {
+        id: `loc-opt-${opt.id}`,
+        label: fullLabel,
+        vote_count: Number(opt.vote_count) || 0,
+        all_votes: opt.all_votes || [],
+        tooltipLabel: fullLabel,
+      };
+    }) || [];
 
-  const showTimeChart =
-    timeChartOptions.length > 0 &&
-    timeChartOptions.some(
-      (opt) => opt.vote_count !== undefined && opt.vote_count !== null
-    );
+  const showTimeChart = timeChartOptions.length > 0;
 
   const showLocationChart =
     locationChartOptions.length > 0 &&
     locationChartOptions.some(
-      (opt) => opt.vote_count !== undefined && opt.vote_count !== null
+      (opt, idx, arr) =>
+        (opt.vote_count !== undefined && opt.vote_count > 0) || arr.length === 1
     );
 
   return (
@@ -370,36 +395,62 @@ const EventDetailPage = ({ eventId: propEventId, onBackToList }) => {
               <strong>Creator:</strong> {creatorUsername}
             </p>
             <p>
+              <strong>Status:</strong>{" "}
+              <span
+                className={`status-badge status-${(
+                  eventDetails.status || "undefined"
+                )
+                  .toLowerCase()
+                  .replace(/\s+/g, "-")}`}
+              >
+                {eventDetails.status_display || eventDetails.status}
+              </span>
+            </p>
+            <p>
               <strong>Created:</strong>{" "}
               {formatDateTimeShort(eventDetails.creation_date)}
             </p>
-            <p>
-              <strong>Status:</strong>{" "}
-              <span className={`status-badge status-${statusClass}`}>
-                {displayStatus}
-              </span>
-            </p>
-            {eventDetails.final_start_time && (
-              <p>
-                <strong>Final Time:</strong>{" "}
-                {formatDateTimeShort(eventDetails.final_start_time)}
-                {eventDetails.final_end_time &&
-                  eventDetails.final_end_time !==
-                    eventDetails.final_start_time &&
-                  ` - ${formatDateTimeShort(eventDetails.final_end_time)}`}
-              </p>
-            )}
-            {eventDetails.final_location && (
-              <p>
-                <strong>Final Location:</strong>{" "}
-                {typeof eventDetails.final_location === "string"
-                  ? eventDetails.final_location
-                  : `${eventDetails.final_location.name}${
-                      eventDetails.final_location.address
-                        ? ` (${eventDetails.final_location.address})`
-                        : ""
-                    }`}
-              </p>
+
+            {eventDetails.status === "confirmed" && (
+              <>
+                {eventDetails.final_start_time && (
+                  <p>
+                    <strong>Final Time:</strong>{" "}
+                    {formatDateTimeShort(eventDetails.final_start_time)}
+                    {eventDetails.final_end_time &&
+                      eventDetails.final_end_time !==
+                        eventDetails.final_start_time &&
+                      ` - ${formatDateTimeShort(eventDetails.final_end_time)}`}
+                  </p>
+                )}
+                {eventDetails.final_location && (
+                  <p
+                    title={
+                      typeof eventDetails.final_location === "string"
+                        ? eventDetails.final_location
+                        : `${eventDetails.final_location.name}${
+                            eventDetails.final_location.address
+                              ? ` (${eventDetails.final_location.address})`
+                              : ""
+                          }${
+                            eventDetails.final_location.details
+                              ? ` - ${eventDetails.final_location.details}`
+                              : ""
+                          }`
+                    }
+                    className="final-location-text"
+                  >
+                    <strong>Final Location:</strong>{" "}
+                    {typeof eventDetails.final_location === "string"
+                      ? eventDetails.final_location
+                      : `${eventDetails.final_location.name}${
+                          eventDetails.final_location.address
+                            ? ` (${eventDetails.final_location.address})`
+                            : ""
+                        }`}
+                  </p>
+                )}
+              </>
             )}
           </section>
 
@@ -409,14 +460,13 @@ const EventDetailPage = ({ eventId: propEventId, onBackToList }) => {
               <ul className="attendees-list">
                 {eventDetails.invitations.map((person) => (
                   <li
-                    key={`inv-${person.id || person.user_id || person.email}`}
+                    key={`inv-${
+                      person.id || person.user_id || person.user_email
+                    }`}
                     className="attendee-item"
                   >
                     <span>
-                      {person.username ||
-                        person.user_email ||
-                        person.email ||
-                        "Guest"}
+                      {person.username || person.user_email || "Guest"}
                     </span>
                     <span
                       className={`status-badge status-${(
@@ -454,7 +504,14 @@ const EventDetailPage = ({ eventId: propEventId, onBackToList }) => {
                     ) : (
                       <ul className="options-list-simple">
                         {eventDetails.time_options.map((opt) => (
-                          <li key={`time-opt-${opt.id}`}>
+                          <li
+                            key={`time-opt-${opt.id}`}
+                            title={`${formatDateTimeShort(opt.start_time)}${
+                              opt.end_time && opt.end_time !== opt.start_time
+                                ? ` to ${formatDateTimeShort(opt.end_time)}`
+                                : ""
+                            }`}
+                          >
                             {formatDateTimeShort(opt.start_time)}
                             {opt.end_time &&
                               opt.end_time !== opt.start_time &&
@@ -471,18 +528,26 @@ const EventDetailPage = ({ eventId: propEventId, onBackToList }) => {
                     <h3>Location Options:</h3>
                     {showLocationChart ? (
                       <VotingBarChart
-                        optionsData={locationChartOptions}
+                        optionsData={locationChartOptions.map((opt) => ({
+                          ...opt,
+                        }))}
                         optionTypeLabel="Location Option"
                       />
                     ) : (
                       <ul className="options-list-simple">
-                        {eventDetails.location_options.map((opt) => (
-                          <li key={`loc-opt-${opt.id}`}>
-                            {opt.name}
-                            {opt.address ? ` (${opt.address})` : ""}
-                            {opt.details && <span> - {opt.details}</span>}
-                          </li>
-                        ))}
+                        {eventDetails.location_options.map((opt) => {
+                          const fullDisplayLocation = `${opt.name}${
+                            opt.address ? ` (${opt.address})` : ""
+                          }${opt.details ? ` - ${opt.details}` : ""}`;
+                          return (
+                            <li
+                              key={`loc-opt-${opt.id}`}
+                              title={fullDisplayLocation}
+                            >
+                              {fullDisplayLocation}
+                            </li>
+                          );
+                        })}
                       </ul>
                     )}
                   </>

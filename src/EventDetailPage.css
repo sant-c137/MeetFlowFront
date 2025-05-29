@@ -2,9 +2,11 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 90vh;
+  height: 90%;
   padding: 1.5rem 2rem;
   background-color: #ffffff;
+  overflow: scroll;
+  scrollbar-width: none;
 }
 
 .event-detail-header {
@@ -124,6 +126,12 @@
 
 .options-list-simple li {
   padding: 0.25rem 0;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  display: block;
 }
 
 .action-button {
@@ -266,4 +274,21 @@
   .column-content-section h2 {
     font-size: 1.3em;
   }
+}
+
+.location-name-truncate {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+  vertical-align: middle;
+}
+
+.voting-bar-chart .option-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  display: block;
 }

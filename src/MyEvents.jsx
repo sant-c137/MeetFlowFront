@@ -6,7 +6,7 @@ import axios from "axios";
 
 Modal.setAppElement("#root");
 
-const MyEvents = ({ onEventSelect }) => {
+const MyEvents = ({ onEventSelect, refreshTrigger }) => {
   const [events, setEvents] = useState([]);
   const [isLoadingEvents, setIsLoadingEvents] = useState(true);
   const [eventsError, setEventsError] = useState(null);
@@ -59,7 +59,7 @@ const MyEvents = ({ onEventSelect }) => {
 
   useEffect(() => {
     fetchEvents();
-  }, [fetchEvents]);
+  }, [fetchEvents, refreshTrigger]);
 
   const handleOpenCreateModal = () => {
     resetCreateModalForm();

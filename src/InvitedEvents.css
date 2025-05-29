@@ -128,3 +128,21 @@
   justify-content: flex-end;
   gap: 10px;
 }
+
+.respond-vote-button {
+  background-color: #6a5acd;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-size: 0.8em;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 0.3rem;
+
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #5849a4;
+  }
+}

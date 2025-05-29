@@ -286,7 +286,12 @@ const Header = () => {
           <h1>MeetFlow</h1>
         </div>
 
-        <div className="input-wrapper" ref={searchInputRef}>
+        <div
+          className={`input-wrapper ${
+            isSearchDropdownOpen ? "search-active" : ""
+          }`}
+          ref={searchInputRef}
+        >
           {" "}
           <img
             src={searchIconSvg}
