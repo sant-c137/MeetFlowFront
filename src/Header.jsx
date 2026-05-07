@@ -6,7 +6,6 @@ import "./Header.css";
 import logoImage from "/logo.png";
 import accountSvg from "/account.svg";
 import notificationIcon from "/notifications.svg";
-import searchIconSvg from "/search.svg";
 
 axios.defaults.baseURL = "http://localhost:8000";
 axios.defaults.withCredentials = true;
@@ -22,17 +21,8 @@ const Header = () => {
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [isLoadingNotifications, setIsLoadingNotifications] = useState(false);
   const notificationsButtonRef = useRef(null);
   const notificationsDropdownRef = useRef(null);
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchError, setSearchError] = useState(null);
-  const [isSearchDropdownOpen, setIsSearchDropdownOpen] = useState(false);
-  const searchInputRef = useRef(null);
-  const searchDropdownRef = useRef(null);
 
   const accountButtonRef = useRef(null);
   const accountDropdownRef = useRef(null);
@@ -47,7 +37,6 @@ const Header = () => {
         if (sessionResponse.data.authenticated && sessionResponse.data.user) {
           setUserData(sessionResponse.data.user);
           setIsLoggedIn(true);
-          fetchNotifications();
         } else {
           setIsLoggedIn(false);
           setUserData(null);
@@ -57,7 +46,7 @@ const Header = () => {
       } catch (error) {
         console.error(
           "Session check failed:",
-          error.response ? error.response.data : error.message
+          error.response ? error.response.data : error.message,
         );
         setIsLoggedIn(false);
         setUserData(null);
@@ -68,33 +57,8 @@ const Header = () => {
     initialLoad();
   }, []);
 
-  const fetchNotifications = async () => {
-    if (!isLoggedIn) return;
-    setIsLoadingNotifications(true);
-    try {
-      const response = await axios.get("/api/notifications/");
-      const fetchedNotifications = response.data || [];
-      setNotifications(fetchedNotifications);
-      setUnreadCount(fetchedNotifications.filter((n) => !n.read).length);
-    } catch (error) {
-      console.error(
-        "Failed to fetch notifications:",
-        error.response ? error.response.data : error.message
-      );
-    } finally {
-      setIsLoadingNotifications(false);
-    }
-  };
-
   useEffect(() => {
     let intervalId = null;
-    if (isLoggedIn) {
-      fetchNotifications();
-      intervalId = setInterval(fetchNotifications, 30000);
-    } else {
-      setNotifications([]);
-      setUnreadCount(0);
-    }
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
@@ -111,7 +75,9 @@ const Header = () => {
       try {
         await axios.put(`/api/notifications/${notification.id}/read/`);
         setNotifications((prev) =>
-          prev.map((n) => (n.id === notification.id ? { ...n, read: true } : n))
+          prev.map((n) =>
+            n.id === notification.id ? { ...n, read: true } : n,
+          ),
         );
         setUnreadCount((prev) => (prev > 0 ? prev - 1 : 0));
       } catch (error) {
@@ -167,72 +133,6 @@ const Header = () => {
       document.removeEventListener("mousedown", handleClickOutsideAccount);
   }, []);
 
-  useEffect(() => {
-    if (searchTerm.trim().length === 0) {
-      setSearchResults([]);
-      setIsSearchDropdownOpen(false);
-      setSearchError(null);
-      return;
-    }
-
-    if (searchTerm.trim().length < 2) {
-      setSearchResults([]);
-      setIsSearchDropdownOpen(true);
-      return;
-    }
-
-    const handler = setTimeout(async () => {
-      setIsSearching(true);
-      setSearchError(null);
-      setIsSearchDropdownOpen(true);
-
-      try {
-        const response = await axios.get(
-          `/api/events/search/?q=${encodeURIComponent(searchTerm)}`
-        );
-        setSearchResults(response.data || []);
-        if (response.data.length === 0) {
-          setSearchError(null);
-        }
-      } catch (error) {
-        console.error("Error searching events:", error);
-        setSearchError("Failed to fetch search results.");
-        setSearchResults([]);
-      } finally {
-        setIsSearching(false);
-      }
-    }, 500);
-
-    return () => clearTimeout(handler);
-  }, [searchTerm]);
-
-  const handleSearchInputChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleSearchResultClick = (event) => {
-    navigate(`/events/${event.id}`);
-    setSearchTerm("");
-    setSearchResults([]);
-    setIsSearchDropdownOpen(false);
-  };
-
-  useEffect(() => {
-    const handleClickOutsideSearch = (event) => {
-      if (
-        searchDropdownRef.current &&
-        !searchDropdownRef.current.contains(event.target) &&
-        searchInputRef.current &&
-        !searchInputRef.current.contains(event.target)
-      ) {
-        setIsSearchDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutsideSearch);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutsideSearch);
-  }, []);
-
   const toggleAccountDropdown = () => {
     if (isLoggedIn) {
       setIsAccountModalOpen((prev) => !prev);
@@ -253,9 +153,6 @@ const Header = () => {
     setIsAccountModalOpen(false);
     setNotifications([]);
     setUnreadCount(0);
-    setSearchTerm("");
-    setSearchResults([]);
-    setIsSearchDropdownOpen(false);
     navigate("/");
 
     window.location.href = "/";
@@ -286,70 +183,11 @@ const Header = () => {
           <h1>MeetFlow</h1>
         </div>
 
-        <div
-          className={`input-wrapper ${
-            isSearchDropdownOpen ? "search-active" : ""
-          }`}
-          ref={searchInputRef}
-        >
-          {" "}
-          <img
-            src={searchIconSvg}
-            alt="Search Icon"
-            className="search-icon-img"
-          />
-          <input
-            type="text"
-            placeholder="Search events..."
-            className="search-input"
-            value={searchTerm}
-            onChange={handleSearchInputChange}
-            onFocus={() => setIsSearchDropdownOpen(true)}
-          />
-          {isSearchDropdownOpen && (
-            <div className="search-results-dropdown" ref={searchDropdownRef}>
-              {isSearching && (
-                <div className="search-dropdown-item loading">Searching...</div>
-              )}
-              {searchError && (
-                <div className="search-dropdown-item error">{searchError}</div>
-              )}
-              {!isSearching &&
-                !searchError &&
-                searchTerm.trim().length > 0 &&
-                searchTerm.trim().length < 2 && (
-                  <div className="search-dropdown-item info">
-                    Type at least 2 characters.
-                  </div>
-                )}
-              {!isSearching &&
-                !searchError &&
-                searchResults.length === 0 &&
-                searchTerm.trim().length >= 2 && (
-                  <div className="search-dropdown-item info">
-                    No events found.
-                  </div>
-                )}
-              {!isSearching && !searchError && searchResults.length > 0 && (
-                <ul>
-                  {searchResults.map((event) => (
-                    <li
-                      key={event.id}
-                      className="search-dropdown-item"
-                      onClick={() => handleSearchResultClick(event)}
-                    >
-                      {event.title}{" "}
-                      {event.start_time && (
-                        <span className="search-result-date">
-                          - {new Date(event.start_time).toLocaleDateString()}
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          )}
+        <div className="learning-path-header-global">
+          <div className="path-title">
+            <span className="path-label">Learning Path</span>
+            <h2 className="path-name">Basic Python</h2>
+          </div>
         </div>
 
         <div className="header-actions">

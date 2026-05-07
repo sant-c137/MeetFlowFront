@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../auth/AuthProvider";
 import { Navigate } from "react-router-dom";
-import axios from "axios";
+import api from "../services/api";
 import Button from "../components/Button";
 import "./Login.css";
 
@@ -14,17 +14,11 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/login/",
+      const response = await api.post(
+        "/api/login/",
         {
           username,
           password,
-        },
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
         }
       );
 

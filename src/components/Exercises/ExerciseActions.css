@@ -1,0 +1,71 @@
+.exercise-actions-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.action-btn-new {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 2rem;
+  border-radius: 1rem;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+.action-btn-new:active {
+  transform: translateY(1px);
+}
+
+.check-btn {
+  background: var(--color-primary);
+  color: white;
+}
+
+.check-btn:hover:not(.disabled) {
+  background: var(--color-primary-hover);
+  box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+  transform: translateY(-2px);
+}
+
+.check-btn.disabled {
+  background: var(--bg-hover);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  box-shadow: none;
+  border: 1px solid var(--border-color);
+}
+
+.next-btn {
+  background: var(--success);
+  color: white;
+}
+
+.next-btn:hover {
+  background: var(--success-hover);
+  box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
+  transform: translateY(-2px);
+}
+
+.retry-btn {
+  background: #f59e0b;
+  color: white;
+}
+
+.retry-btn:hover {
+  background: #d97706;
+  box-shadow: 0 10px 15px -3px rgba(245, 158, 11, 0.3);
+  transform: translateY(-2px);
+}
+
+/* Dark mode adaptation if the parent container is dark */
+.editor-container .exercise-actions-container {
+  border-top-color: rgba(255, 255, 255, 0.1);
+}

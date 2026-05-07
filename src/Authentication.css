@@ -6,7 +6,7 @@
   align-items: center;
   flex-direction: column;
 
-  background-color: #fffbf2;
+  background-color: var(--bg-color);
 }
 
 .tab-content {

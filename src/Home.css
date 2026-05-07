@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #fdfcfa;
+  background-color: var(--bg-color);
 }
 
 .home-content-area {
@@ -22,13 +22,13 @@
 
 .events-header-bar h1 {
   font-size: 2.2em;
-  color: #333;
+  color: var(--text-color);
   font-weight: 700;
 }
 
 .new-event-button {
-  background-color: #6a5acd;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--bg-white);
   border: none;
   border-radius: 8px;
   padding: 12px 24px;
@@ -39,7 +39,40 @@
 }
 
 .new-event-button:hover {
-  background-color: #5849a4;
+  background-color: var(--color-primary-hover);
+}
+
+.main-content-layout {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  background-color: var(--bg-white);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border-color);
+  margin-bottom: 0;
+}
+
+.map-wrapper {
+  width: 100%;
+  height: 100%;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.map-wrapper.lesson-open {
+  width: 33.33%;
+}
+
+.lesson-wrapper {
+  width: 66.66%;
+  height: 100%;
+  border-left: 1px solid var(--border-color);
+  background-color: var(--bg-white);
+  overflow: hidden;
 }
 
 .loading-text,
@@ -47,12 +80,12 @@
 .no-events-text {
   text-align: center;
   font-size: 1.1em;
-  color: #666;
+  color: var(--text-muted);
   padding: 20px;
 }
 
 .error-text {
-  color: #d9534f;
+  color: var(--danger);
 }
 
 .modal-overlay {
@@ -61,7 +94,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.65);
+  background-color: var(--overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,10 +102,10 @@
 }
 
 .modal {
-  background: white;
+  background: var(--bg-white);
   padding: 25px 30px;
   border-radius: 10px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 20px var(--box-shadow-medium);
   width: 90%;
   max-width: 550px;
   outline: none;
@@ -84,8 +117,8 @@
   margin-top: 0;
   margin-bottom: 20px;
   font-size: 1.6em;
-  color: #333;
-  border-bottom: 1px solid #eee;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--border-light);
   padding-bottom: 10px;
 }
 
@@ -98,7 +131,7 @@
   display: block;
   margin-bottom: 6px;
   font-weight: 600;
-  color: #444;
+  color: var(--text-color);
   font-size: 0.9em;
 }
 
@@ -107,7 +140,7 @@
 .modal-form textarea {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   font-size: 1em;
   box-sizing: border-box;
@@ -122,22 +155,22 @@
 }
 
 .modal-form .form-fieldset {
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-medium);
   border-radius: 6px;
   padding: 15px;
 }
 .modal-form .form-fieldset legend {
   font-weight: 600;
   padding: 0 8px;
-  color: #555;
+  color: var(--text-muted);
 }
 
 .modal-form .option-group {
-  background-color: #f9f9f9;
+  background-color: var(--bg-light);
   padding: 15px;
   border-radius: 5px;
   margin-bottom: 10px;
-  border: 1px solid #eee;
+  border: 1px solid var(--border-light);
   position: relative;
 }
 .modal-form .time-option-group {
@@ -151,9 +184,9 @@
 
 .modal-form .add-option-btn,
 .modal-form .remove-option-btn {
-  background-color: #e9ecef;
-  color: #495057;
-  border: 1px solid #ced4da;
+  background-color: var(--bg-hover);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   padding: 6px 10px;
   font-size: 0.9em;
@@ -162,18 +195,18 @@
   margin-top: 5px;
 }
 .modal-form .add-option-btn {
-  background-color: #5cb85c;
-  color: white;
-  border-color: #4cae4c;
+  background-color: var(--success);
+  color: var(--bg-white);
+  border-color: var(--success-hover);
 }
 .modal-form .add-option-btn:hover {
-  background-color: #4cae4c;
+  background-color: var(--success-hover);
 }
 
 .modal-form .remove-option-btn {
-  background-color: #d9534f;
-  color: white;
-  border-color: #d43f3a;
+  background-color: var(--danger);
+  color: var(--bg-white);
+  border-color: var(--danger-hover);
   padding: 4px 8px;
   font-size: 1.1em;
   line-height: 1;
@@ -182,7 +215,7 @@
   right: 10px;
 }
 .modal-form .remove-option-btn:hover {
-  background-color: #c9302c;
+  background-color: var(--danger-hover);
 }
 
 .modal-actions {
@@ -193,25 +226,25 @@
 }
 
 .modal-actions .button-primary {
-  background-color: #6a5acd;
-  color: white;
+  background-color: var(--color-primary);
+  color: var(--bg-white);
 }
 .modal-actions .button-primary:hover {
-  background-color: #5849a4;
+  background-color: var(--color-primary-hover);
 }
 .modal-actions .button-secondary {
-  background-color: #6c757d;
-  color: white;
+  background-color: var(--text-light);
+  color: var(--bg-white);
 }
 .modal-actions .button-secondary:hover {
-  background-color: #5a6268;
+  background-color: var(--text-muted);
 }
 .modal-actions .button-danger {
-  background-color: #d9534f;
-  color: white;
+  background-color: var(--danger);
+  color: var(--bg-white);
 }
 .modal-actions .button-danger:hover {
-  background-color: #c9302c;
+  background-color: var(--danger-hover);
 }
 
 .modal-actions button {
@@ -223,12 +256,12 @@
   cursor: pointer;
 }
 .modal-actions button:disabled {
-  background-color: #ccc;
+  background-color: var(--border-color);
   cursor: not-allowed;
 }
 
 .modal-error {
-  color: #d9534f;
+  color: var(--danger);
   margin-top: 15px;
   font-size: 0.9em;
 }
@@ -243,8 +276,8 @@
 .event-detail-content h3 {
   margin-top: 20px;
   font-size: 1.2em;
-  color: #444;
-  border-bottom: 1px solid #f0f0f0;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--bg-hover);
   padding-bottom: 5px;
 }
 .event-detail-content ul {
@@ -254,7 +287,7 @@
 }
 .event-detail-content ul li {
   margin-bottom: 5px;
-  color: #555;
+  color: var(--text-muted);
 }
 
 .home-wrapper {
@@ -270,9 +303,10 @@
   width: 98%;
   height: 97%;
   border-radius: 1rem;
-  background-color: white;
+  background-color: var(--color-secondary);
   border: solid var(--color-secondary) 2px;
-
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 
   & img {

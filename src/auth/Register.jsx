@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../services/api";
 import Button from "../components/Button";
 import "./Register.css";
 
@@ -13,7 +13,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8000/api/register/", {
+      const response = await api.post("/api/register/", {
         username,
         password,
         email,

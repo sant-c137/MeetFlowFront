@@ -16,6 +16,6 @@
   background-color: var(--bg-color);
   padding: 0.5rem 1rem;
   border-radius: 0.4rem;
-  border: solid #dcd7ec 0.1rem;
+  border: solid var(--border-accent) 0.1rem;
   width: 18rem;
 }
